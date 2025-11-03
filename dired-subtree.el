@@ -501,7 +501,7 @@ Return a string suitable for insertion in `dired' buffer."
       (setq beg (point))
       (let ((inhibit-read-only t))
         (remove-text-properties (1- beg) beg '(dired-filename)))
-      (let* ((ov (make-overlay beg end))
+      (let* ((ov (make-overlay beg end nil nil t))
              (parent (dired-subtree--get-ov (1- beg)))
              (depth (or (and parent (1+ (overlay-get parent 'dired-subtree-depth)))
                         1))
