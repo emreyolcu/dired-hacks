@@ -185,7 +185,8 @@ filename (for example when the final directory is empty)."
                     (when dired-collapse-fontify
                       (dired-collapse--create-ov 'to-eol))
                   (setq path (s-chop-prefix (dired-current-directory) path))
-                  (when (string-match-p "/" path)
+                  (when (and (not (equal filename-no-dir path))
+                             (string-match-p "/" path))
                     (let ((default-directory (dired-current-directory)))
                       (dired-collapse--replace-file path))
                     (dired-insert-set-properties (line-beginning-position) (line-end-position))
