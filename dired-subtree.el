@@ -238,6 +238,7 @@ BEG and END default to the region spanned by overlay at point."
   "Insert the SUBTREES again after dired buffer has been reverted.
 
 If no SUBTREES are specified, use `dired-subtree-overlays'."
+  (when (bound-and-true-p dired-collapse-mode) (dired-collapse))
   (-when-let (subtrees-to-process (or subtrees dired-subtree-overlays))
     (let* ((ovs-by-depth (--sort (< (car it) (car other))
                                  (--group-by (overlay-get it 'dired-subtree-depth)
