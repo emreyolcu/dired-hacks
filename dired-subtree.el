@@ -739,6 +739,27 @@ the subtree.  The filter action is read from `dired-filter-map'."
 ;;; Here we redefine a couple of functions from dired.el to make them
 ;;; subtree-aware
 
+;; Since we redefine `dired-current-directory' to be subtree-aware,
+;; we need to get the current directory from `dired-subdir-alist'.
+(defun dired-up-directory (&optional other-window)
+  "Run Dired on parent directory of current directory.
+Find the parent directory either in this buffer or another buffer.
+Creates a buffer if necessary.
+If OTHER-WINDOW (the optional prefix arg), display the parent
+directory in another window."
+  (interactive "P" dired-mode)
+  (let* ((dir (caar dired-subdir-alist)) ;; dired-subtree: get dir from dired-subdir-alist
+	 (up (file-name-directory (directory-file-name dir))))
+    (or (dired-goto-file (directory-file-name dir))
+	;; Only try dired-goto-subdir if buffer has more than one dir.
+	(and (cdr dired-subdir-alist)
+	     (dired-goto-subdir up))
+	(progn
+	  (if other-window
+	      (dired-other-window up)
+	    (dired--find-possibly-alternative-file up))
+	  (dired-goto-file dir)))))
+
 ;; If the point is in a subtree, we need to provide a proper
 ;; directory, not the one that would come from `dired-subdir-alist'.
 (defun dired-current-directory (&optional localp)
